@@ -1,0 +1,141 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: This is a simple API
+  version: "1.0.0"
+  title: Fantasy Basketball League
+  contact:
+    email: kcue1@my.bcit.ca
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: admin
+    description: Secured Admin-only calls
+  - name: manager
+    description: Operations available to regular developers
+
+paths:
+  /game/draft/readings:
+    get:
+      tags:
+        - devices
+      summary: gets draft selections
+      operationId: app.add_pick
+      description: gets draft selections after a timestamp
+      parameters:
+      - name: index
+        in: query
+        description: gets the selection
+        schema:
+          type: integer
+          example: 100
+
+      responses:
+        "200":
+          description: Successfully returned a list of draft selections
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/Player"
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        
+        "404":
+          description: not found
+
+  /game/trades/readings:
+    get:
+      tags:
+        - devices
+      summary: gets trade requests
+      operationId: app.add_trade
+      description: gets trades
+      parameters:
+      - name: index
+        in: query
+        description: gets the selection
+        schema:
+          type: integer
+          example: 100
+
+      responses:
+        "200":
+          description: Successfully returned a list of trade requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trade"
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+components:
+  schemas:
+    Player:
+      type: object
+      required:
+        - playerName
+        - playerTotalFanPts
+        - playerGrade
+      properties:
+        playerId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        playerName:
+          type: string
+          example: Davis
+        jerseyNum:
+          type: integer
+          example: 23
+        playerGrade:
+          type: string
+          example: A
+        plyTotalPoint:
+          type: integer
+          example: 10
+        playerTotalFanPts:
+          type: integer
+          example: 10
+    Trade:
+      type: object
+      required:
+        - tradeId
+        - tradeGrade
+        - tradeDec
+        - tradeProp
+      properties:
+        tradeProp:
+          type: string
+          example: playerName for playerName
+        tradeId:
+          type: string
+          format: uuid
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        tradeGrade:
+          type: string
+          example: A
+        tradeImpact:
+          type: integer
+          example: 11
+        tradeDec:
+          type: string
+          example: 'Y'

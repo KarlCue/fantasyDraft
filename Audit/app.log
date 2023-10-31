@@ -1,0 +1,158 @@
+2023-10-17 10:43:54,319 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 10:43:54,320 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:00:06,564 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:00:06] "GET /ui/ HTTP/1.1" 200 -
+2023-10-17 11:00:06,729 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:00:06] "GET /ui/swagger-ui-standalone-preset.js HTTP/1.1" 200 -
+2023-10-17 11:00:06,737 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:00:06] "GET /ui/swagger-ui.css HTTP/1.1" 200 -
+2023-10-17 11:00:06,740 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:00:06] "GET /ui/swagger-ui-bundle.js HTTP/1.1" 200 -
+2023-10-17 11:00:06,938 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:00:06] "GET /openapi.json HTTP/1.1" 200 -
+2023-10-17 11:00:06,941 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:00:06] "GET /ui/favicon-32x32.png HTTP/1.1" 200 -
+2023-10-17 11:00:13,467 - app - ERROR - Exception on /game/draft/readings [GET]
+Traceback (most recent call last):
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\decorator.py", line 68, in wrapper
+    response = function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\uri_parsing.py", line 149, in wrapper
+    response = function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\validation.py", line 399, in wrapper
+    return function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\response.py", line 112, in wrapper
+    response = function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\parameter.py", line 120, in wrapper
+    return function(**kwargs)
+TypeError: add_pick() missing 1 required positional argument: 'index'
+2023-10-17 11:00:13,473 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:00:13] "[35m[1mGET /game/draft/readings?timestamp=2023-10-03%2010%3A54%3A57.384402 HTTP/1.1[0m" 500 -
+2023-10-17 11:11:41,121 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:11:41,122 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:15:52,560 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:15:52] "GET /ui/ HTTP/1.1" 200 -
+2023-10-17 11:15:52,714 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:15:52] "[36mGET /ui/swagger-ui.css HTTP/1.1[0m" 304 -
+2023-10-17 11:15:52,722 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:15:52] "[36mGET /ui/swagger-ui-standalone-preset.js HTTP/1.1[0m" 304 -
+2023-10-17 11:15:52,725 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:15:52] "[36mGET /ui/swagger-ui-bundle.js HTTP/1.1[0m" 304 -
+2023-10-17 11:15:52,927 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:15:52] "GET /openapi.json HTTP/1.1" 200 -
+2023-10-17 11:15:59,195 - app - ERROR - Exception on /game/draft/readings [GET]
+Traceback (most recent call last):
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\flask\app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\decorator.py", line 68, in wrapper
+    response = function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\uri_parsing.py", line 149, in wrapper
+    response = function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\validation.py", line 399, in wrapper
+    return function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\response.py", line 112, in wrapper
+    response = function(request)
+  File "C:\Users\kacue\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0\LocalCache\local-packages\Python310\site-packages\connexion\decorators\parameter.py", line 120, in wrapper
+    return function(**kwargs)
+TypeError: add_pick() missing 1 required positional argument: 'index'
+2023-10-17 11:15:59,200 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:15:59] "[35m[1mGET /game/draft/readings?timestamp=2023-10-03%2010%3A54%3A57.384402 HTTP/1.1[0m" 500 -
+2023-10-17 11:17:35,513 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:17:35,514 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:17:39,055 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:17:39] "[31m[1mGET /game/draft/readings?timestamp=2023-10-03%2010%3A54%3A57.384402 HTTP/1.1[0m" 400 -
+2023-10-17 11:19:58,688 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:19:58,689 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:20:04,230 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:20:04] "GET /ui/ HTTP/1.1" 200 -
+2023-10-17 11:20:04,389 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:20:04] "[36mGET /ui/swagger-ui.css HTTP/1.1[0m" 304 -
+2023-10-17 11:20:04,392 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:20:04] "[36mGET /ui/swagger-ui-bundle.js HTTP/1.1[0m" 304 -
+2023-10-17 11:20:04,397 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:20:04] "[36mGET /ui/swagger-ui-standalone-preset.js HTTP/1.1[0m" 304 -
+2023-10-17 11:20:04,526 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:20:04] "GET /openapi.json HTTP/1.1" 200 -
+2023-10-17 11:20:04,530 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:20:04] "[36mGET /ui/favicon-32x32.png HTTP/1.1[0m" 304 -
+2023-10-17 11:20:10,212 - basicLogger - INFO - Retrieving BP at index 10
+2023-10-17 11:20:11,218 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:20:11] "[35m[1mGET /game/draft/readings?index=10 HTTP/1.1[0m" 204 -
+2023-10-17 11:21:03,552 - basicLogger - INFO - Retrieving BP at index 10
+2023-10-17 11:21:04,562 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:21:04] "[35m[1mGET /game/draft/readings?index=10 HTTP/1.1[0m" 204 -
+2023-10-17 11:21:09,350 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:21:09,352 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:21:11,981 - basicLogger - INFO - retrieve selection 10
+2023-10-17 11:21:12,991 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:21:12] "[35m[1mGET /game/draft/readings?index=10 HTTP/1.1[0m" 204 -
+2023-10-17 11:23:54,918 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:23:54,920 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:31:00,195 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:31:00] "GET /ui/ HTTP/1.1" 200 -
+2023-10-17 11:31:00,379 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:31:00] "[36mGET /ui/swagger-ui-bundle.js HTTP/1.1[0m" 304 -
+2023-10-17 11:31:00,385 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:31:00] "[36mGET /ui/swagger-ui-standalone-preset.js HTTP/1.1[0m" 304 -
+2023-10-17 11:31:00,389 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:31:00] "[36mGET /ui/swagger-ui.css HTTP/1.1[0m" 304 -
+2023-10-17 11:31:00,557 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:31:00] "GET /openapi.json HTTP/1.1" 200 -
+2023-10-17 11:31:05,009 - basicLogger - INFO - retrieve selection 10
+2023-10-17 11:31:06,014 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:31:06] "[35m[1mGET /game/draft/readings?index=10 HTTP/1.1[0m" 204 -
+2023-10-17 11:31:08,979 - basicLogger - INFO - retrieve selection 10
+2023-10-17 11:31:09,988 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:31:09] "[35m[1mGET /game/draft/readings?index=10 HTTP/1.1[0m" 204 -
+2023-10-17 11:33:29,053 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:33:29,054 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:33:44,985 - basicLogger - INFO - retrieve selection 10
+2023-10-17 11:33:45,991 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:33:45] "[35m[1mGET /game/draft/readings?index=10 HTTP/1.1[0m" 204 -
+2023-10-17 11:33:48,346 - basicLogger - INFO - retrieve selection 10
+2023-10-17 11:33:49,357 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:33:49] "[35m[1mGET /game/draft/readings?index=10 HTTP/1.1[0m" 204 -
+2023-10-17 11:34:21,625 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:34:21] "GET /ui/ HTTP/1.1" 200 -
+2023-10-17 11:34:21,796 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:34:21] "[36mGET /ui/swagger-ui-bundle.js HTTP/1.1[0m" 304 -
+2023-10-17 11:34:21,796 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:34:21] "[36mGET /ui/swagger-ui-standalone-preset.js HTTP/1.1[0m" 304 -
+2023-10-17 11:34:21,798 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:34:21] "[36mGET /ui/swagger-ui.css HTTP/1.1[0m" 304 -
+2023-10-17 11:34:21,937 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:34:21] "GET /openapi.json HTTP/1.1" 200 -
+2023-10-17 11:34:21,941 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:34:21] "[36mGET /ui/favicon-32x32.png HTTP/1.1[0m" 304 -
+2023-10-17 11:34:24,379 - basicLogger - INFO - retrieve selection 100
+2023-10-17 11:34:25,389 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:34:25] "[35m[1mGET /game/draft/readings?index=100 HTTP/1.1[0m" 204 -
+2023-10-17 11:38:10,983 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:38:10,984 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:38:14,867 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:38:14] "GET /ui/ HTTP/1.1" 200 -
+2023-10-17 11:38:15,024 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:38:15] "[36mGET /ui/swagger-ui.css HTTP/1.1[0m" 304 -
+2023-10-17 11:38:15,031 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:38:15] "[36mGET /ui/swagger-ui-bundle.js HTTP/1.1[0m" 304 -
+2023-10-17 11:38:15,036 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:38:15] "[36mGET /ui/swagger-ui-standalone-preset.js HTTP/1.1[0m" 304 -
+2023-10-17 11:38:15,164 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:38:15] "GET /openapi.json HTTP/1.1" 200 -
+2023-10-17 11:38:15,167 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:38:15] "[36mGET /ui/favicon-32x32.png HTTP/1.1[0m" 304 -
+2023-10-17 11:38:18,290 - basicLogger - INFO - retrieve selection 100
+2023-10-17 11:38:19,295 - basicLogger - ERROR - Could not find Car Schedule at index 100
+2023-10-17 11:38:19,296 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:38:19] "[33mGET /game/draft/readings?index=100 HTTP/1.1[0m" 404 -
+2023-10-17 11:39:17,401 - basicLogger - INFO - retrieve selection 10
+2023-10-17 11:39:18,408 - basicLogger - ERROR - Could not find Car Schedule at index 10
+2023-10-17 11:39:18,409 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:39:18] "[33mGET /game/draft/readings?index=10 HTTP/1.1[0m" 404 -
+2023-10-17 11:40:25,047 - basicLogger - INFO - retrieve selection 10
+2023-10-17 11:40:26,062 - basicLogger - ERROR - Could not find Car Schedule at index 10
+2023-10-17 11:40:26,063 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:40:26] "[33mGET /game/draft/readings?index=10 HTTP/1.1[0m" 404 -
+2023-10-17 11:40:30,157 - basicLogger - INFO - retrieve selection 100
+2023-10-17 11:40:31,165 - basicLogger - ERROR - Could not find Car Schedule at index 100
+2023-10-17 11:40:31,167 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:40:31] "[33mGET /game/draft/readings?index=100 HTTP/1.1[0m" 404 -
+2023-10-17 11:40:36,635 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8200
+ * Running on http://10.65.76.0:8200
+2023-10-17 11:40:36,636 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2023-10-17 11:40:38,406 - basicLogger - INFO - retrieve selection 100
+2023-10-17 11:40:39,415 - basicLogger - ERROR - Could not find selection at index 100
+2023-10-17 11:40:39,419 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:40:39] "[33mGET /game/draft/readings?index=100 HTTP/1.1[0m" 404 -
+2023-10-17 11:41:25,631 - basicLogger - INFO - retrieve selection 1
+2023-10-17 11:41:26,642 - basicLogger - ERROR - Could not find selection at index 1
+2023-10-17 11:41:26,642 - werkzeug - INFO - 10.65.76.0 - - [17/Oct/2023 11:41:26] "[33mGET /game/draft/readings?index=1 HTTP/1.1[0m" 404 -

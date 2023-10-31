@@ -1,0 +1,9 @@
+version: 1
+addpick:
+   url: http://localhost:8090/game/draft
+addtrade:
+   url: http://localhost:8090/game/trades
+events:
+   hostname: ec2-34-220-142-67.us-west-2.compute.amazonaws.com
+   port: 9092
+   topic: events

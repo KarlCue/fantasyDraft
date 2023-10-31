@@ -1,0 +1,63 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: This is a simple API
+  version: "1.0.0"
+  title: Fantasy Basketball League
+  contact:
+    email: kcue1@my.bcit.ca
+  license:
+    name: Apache 2.0
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+tags:
+  - name: admin
+    description: Secured Admin-only calls
+  - name: manager
+    description: Operations available to regular developers
+
+paths:
+  /stats:
+    get:
+      summary: gets the events stats
+      operationId: app.get_stats
+      description: gets draft selections and trade request processed statistics
+      responses:
+        "200":
+          description: successfully returns a list of draft selections and trade requests
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: "#/components/schemas/LeagueMoves"
+
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  schemas:
+    LeagueMoves:
+      required:
+        - draft_selection
+        - trade_moves
+        - maxPoints
+        - totalPoints
+      properties:
+        draft_selection:
+          type: integer
+          example: 10
+        trade_moves:
+          type: integer
+          example: 10
+        maxPoints:
+          type: integer
+          example: 10
+        totalPoints:
+          type: integer
+          example: 10

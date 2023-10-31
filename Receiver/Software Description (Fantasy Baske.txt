@@ -1,0 +1,17 @@
+Software Description (Fantasy Basketball League)
+ - an application that allows users to create their own fantasy league. Managers (participants) can draft their players and will be able to trade them as the season go.
+
+Events
+	- the events are trading players and drafting up to 15 players to create their own roster. 
+
+		Peak Concurrent Events
+			- Peak concurrent events could occur on trade deadlines, where managers try their best to have the best team. Trades could be up to 1000 trades per minute.
+
+		Different Users
+			Managers - participants in the fantasy league
+				- usually basketball fans
+			Admin - host
+
+
+
+
