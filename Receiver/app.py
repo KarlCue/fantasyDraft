@@ -36,7 +36,7 @@ def add_pick(body):
 
     logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
 
-    client = KafkaClient(hosts='ec2-34-220-142-67.us-west-2.compute.amazonaws.com:9092')
+    client = KafkaClient(hosts='ec2-52-42-191-123.us-west-2.compute.amazonaws.com:9092')
     topic = client.topics[str.encode('FantasyDraft')]
     producer = topic.get_sync_producer()
     msg = { "type": "addPick",
@@ -57,7 +57,7 @@ def add_trade(body):
 
     logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
 
-    client = KafkaClient(hosts='ec2-34-220-142-67.us-west-2.compute.amazonaws.com:9092')
+    client = KafkaClient(hosts='ec2-52-42-191-123.us-west-2.compute.amazonaws.com:9092')
     topic = client.topics[str.encode('FantasyDraft')]
     producer = topic.get_sync_producer()
     msg = { "type": "addTrade",

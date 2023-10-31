@@ -13,7 +13,7 @@ current_datetime = datetime.datetime.now()
 current_datetime_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 MAX_EVENTS = 10
-SERVICE_PORT = 8200
+SERVICE_PORT = 8110
 YAML_FILE = "fantasyLeague.yaml"
 CONF_YML = 'app_conf.yml'
 LOG_YML = 'log_conf.yml'
@@ -43,7 +43,7 @@ def add_pick(index):
         for msg in consumer:
             msg_str = msg.value.decode('utf-8')
             msg = json.loads(msg_str)
-            if msg.get("type") == "schedule_choice":
+            if msg.get("type") == "addPick":
                 events.append(msg)
                 if len(events) > int(index):
                     logger.info("Found selections at index %d" % int(index))
@@ -64,13 +64,13 @@ def add_trade(index):
 
     consumer = topic.get_simple_consumer(reset_offset_on_start=True,
     consumer_timeout_ms=1000)
-    logger.info("Retrieving BP at index %d" % index)
+    logger.info("retrieve trade %d" % index)
     try:
         events = []
         for msg in consumer:
             msg_str = msg.value.decode('utf-8')
             msg = json.loads(msg_str)
-            if msg.get("type") == "schedule_choice":
+            if msg.get("type") == "addTrade":
                 events.append(msg)
                 if len(events) > int(index):
                     logger.info("Found trades at index %d" % int(index))

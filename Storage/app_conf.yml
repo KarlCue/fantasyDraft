@@ -2,10 +2,10 @@ version: 1
 data:
  user: user
  password: password
- hostname: ec2-34-220-142-67.us-west-2.compute.amazonaws.com
+ hostname: ec2-52-42-191-123.us-west-2.compute.amazonaws.com
  port: 3306
  db: FantasyDraft
 events:
-  hostname: ec2-34-220-142-67.us-west-2.compute.amazonaws.com
+  hostname: ec2-52-42-191-123.us-west-2.compute.amazonaws.com
   port: 9092
   topic: FantasyDraft
