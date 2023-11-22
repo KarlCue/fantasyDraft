@@ -43,35 +43,35 @@ services:
     depends_on:
       - "zookeeper"
 
-  # receiver:
-  #   image: receiver
-  #   ports:
-  #     - "8081:8081"
-  #   depends_on:
-  #     - kafka
+  receiver:
+    image: receiver
+    ports:
+      - "8081:8081"
+    depends_on:
+      - kafka
 
-  # storage:
-  #   image: storage
-  #   ports:
-  #     - "8090:8090"
-  #   depends_on:
-  #     - kafka
-  #     - db
+  storage:
+    image: storage
+    ports:
+      - "8090:8090"
+    depends_on:
+      - kafka
+      - db
 
-  # processing:
-  #   image: processing
-  #   ports:
-  #     - "8100:8100"
-  #   network_mode: "host"
-  #   depends_on:
-  #     - storage
+  processing:
+    image: processing
+    ports:
+      - "8100:8100"
+    network_mode: "host"
+    depends_on:
+      - storage
 
-  # audit_log:
-  #   image: audit_log
-  #   ports:
-  #     - "8110:8110"
-  #   depends_on:
-  #     - kafka
+  audit_log:
+    image: audit_log
+    ports:
+      - "8110:8110"
+    depends_on:
+      - kafka
 
 # Names our volume
 volumes:
