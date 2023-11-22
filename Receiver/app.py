@@ -13,10 +13,11 @@ current_datetime = datetime.datetime.now()
 current_datetime_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
 MAX_EVENTS = 10
-SERVICE_PORT = 8080
+SERVICE_PORT = 8081
 YAML_FILE = "fantasyLeague.yaml"
 CONF_YML = 'app_conf.yml'
 LOG_YML = 'log_conf.yml'
+HOST = 'acit3855.eastus.cloudapp.azure.com:9092'
 
 with open (CONF_YML, "r") as f:
     app_config = yaml.safe_load(f.read())
@@ -36,7 +37,7 @@ def add_pick(body):
 
     logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
 
-    client = KafkaClient(hosts='ec2-52-42-191-123.us-west-2.compute.amazonaws.com:9092')
+    client = KafkaClient(hosts=HOST)
     topic = client.topics[str.encode('FantasyDraft')]
     producer = topic.get_sync_producer()
     msg = { "type": "addPick",
@@ -57,7 +58,7 @@ def add_trade(body):
 
     logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
 
-    client = KafkaClient(hosts='ec2-52-42-191-123.us-west-2.compute.amazonaws.com:9092')
+    client = KafkaClient(hosts=HOST)
     topic = client.topics[str.encode('FantasyDraft')]
     producer = topic.get_sync_producer()
     msg = { "type": "addTrade",

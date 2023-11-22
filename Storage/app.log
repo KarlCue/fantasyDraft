@@ -4809,3 +4809,10 @@ sqlalchemy.exc.StatementError: (builtins.TypeError) Not a boolean value: 'Y'
 2023-10-17 11:40:20,598 - basicLogger - DEBUG - Stored Trade request with the a trace id of a5d375d1-0f10-4e0e-8f14-43b7947cdf83
 2023-10-17 11:40:20,615 - basicLogger - INFO - Message: {'type': 'addTrade', 'datetime': '2023-10-17T11:40:20', 'payload': {'trace_id': '10aa4fc3-5fd0-45c7-862c-c2c0644289ad', 'tradeDec': 'Y', 'tradeGrade': 'A', 'tradeId': 'ed7c95c5-5960-4f90-bda0-f629d59f1e75', 'tradeImpact': 75, 'tradeProp': 'playerName for playerName'}}
 2023-10-17 11:40:20,666 - basicLogger - DEBUG - Stored Trade request with the a trace id of 10aa4fc3-5fd0-45c7-862c-c2c0644289ad
+2023-11-21 10:17:28,043 - basicLogger - INFO - mysql database is running on HostName:ec2-34-220-186-247.us-west-2.compute.amazonaws.com port3306
+2023-11-21 10:17:28,095 - basicLogger - INFO - mysql database is running on HostName:ec2-34-220-186-247.us-west-2.compute.amazonaws.com port3306
+2023-11-21 10:17:28,148 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8090
+ * Running on http://10.65.66.147:8090
+2023-11-21 10:17:28,148 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
