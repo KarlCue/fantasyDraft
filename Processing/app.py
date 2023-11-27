@@ -17,6 +17,9 @@ LOG_YML = 'log_conf.yml'
 current_datetime = datetime.datetime.now()
 current_datetime_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
 
+min_date = datetime.datetime.min
+min_date_str = min_date.strftime("%Y-%m-%d %H:%M:%S")
+
 with open (CONF_YML, 'r') as f:
     app_config = yaml.safe_load(f.read())
 
@@ -76,8 +79,8 @@ def populate_stats():
             with open(app_config['datastore']['filename'], 'w') as config_file:
                 json.dump(stats, config_file)
 
-        pick = requests.get(f"{app_config['eventstore']['url']}/game/draft/readings")
-        trade = requests.get(f"{app_config['eventstore']['url']}/game/trades/readings", params={"timestamp" : current_datetime})
+        pick = requests.get(f"{app_config['eventstore']['url']}/game/draft/readings", params={"timestamp" : min_date_str })
+        trade = requests.get(f"{app_config['eventstore']['url']}/game/trades/readings", params={"timestamp" : min_date_str})
         data = pick.json()
         if pick.status_code == 200 and trade.status_code == 200:
             picks = len(pick.json())
