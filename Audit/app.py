@@ -8,6 +8,7 @@ import requests
 import json
 from pykafka import KafkaClient
 from connexion import NoContent
+from flask_cors import CORS, cross_origin
 
 current_datetime = datetime.datetime.now()
 current_datetime_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -84,6 +85,8 @@ def add_trade(index):
 
 
 app = connexion.FlaskApp(__name__, specification_dir='')
+CORS(app.app)
+app.app.config['CORS_HEADERS'] = 'Content-Type'
 app.add_api(YAML_FILE, 
         strict_validation=True,
         validate_responses=True)
