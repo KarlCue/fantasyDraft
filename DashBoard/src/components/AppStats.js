@@ -46,7 +46,7 @@ export default function AppStats() {
 							<td colspan="2">Max Points by a Star: {stats['maxPoints']}</td>
 						</tr>
 						<tr>
-							<td colspan="2">Total Poits: {stats['totalPoints']}</td>
+							<td colspan="2">Total Points: {stats['totalPoints']}</td>
 						</tr>
 					</tbody>
                 </table>
