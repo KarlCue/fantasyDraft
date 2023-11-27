@@ -17,7 +17,6 @@ SERVICE_PORT = 8110
 YAML_FILE = "fantasyLeague.yaml"
 CONF_YML = 'app_conf.yml'
 LOG_YML = 'log_conf.yml'
-HOST = 'acit3855.eastus.cloudapp.azure.com:9092'
 
 with open (CONF_YML, "r") as f:
     app_config = yaml.safe_load(f.read())
@@ -31,7 +30,9 @@ logger = logging.getLogger('basicLogger')
 
 def add_pick(index):
 
-    client = KafkaClient(hosts=HOST)
+    hostname = "%s:%d" % (app_config["events"]["hostname"],
+    app_config["events"]["port"])
+    client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
 
     consumer = topic.get_simple_consumer(reset_offset_on_start=True,
@@ -56,7 +57,9 @@ def add_pick(index):
 
 def add_trade(index):
 
-    client = KafkaClient(hosts=HOST)
+    hostname = "%s:%d" % (app_config["events"]["hostname"],
+    app_config["events"]["port"])
+    client = KafkaClient(hosts=hostname)
     topic = client.topics[str.encode(app_config["events"]["topic"])]
 
     consumer = topic.get_simple_consumer(reset_offset_on_start=True,
