@@ -39,8 +39,8 @@ export default function AppStats() {
 							<th>Fantasy League</th>
 						</tr>
 						<tr>
-							<td>Number of Draft Selections: {stats['draft_selection']}</td>
-							<td>Number of Trades: {stats['trade_moves']}</td>
+							<td>New Draft Selections: {stats['draft_selection']}</td>
+							<td>New Trades: {stats['trade_moves']}</td>
 						</tr>
 						<tr>
 							<td colspan="2">Max Points by a Star: {stats['maxPoints']}</td>
