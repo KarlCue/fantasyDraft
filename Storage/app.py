@@ -13,6 +13,7 @@ import datetime
 
 from pykafka import KafkaClient
 from pykafka.common import OffsetType
+from pykafka.exceptions import KafkaException
 from threading import Thread
 import json
 
@@ -98,7 +99,7 @@ def process_messages():
                         consumer = topic.get_simple_consumer(consumer_group=b'event_group',reset_offset_on_start=False,auto_offset_reset=OffsetType.LATEST)
                         logger.info("Successfully connected to kafka")
                         break
-                except:
+                except KafkaException:
                         logger.error(f"Unable to connect to kafka, retrying in {retry_wait} seconds")
                         time.sleep(retry_wait)
                         retry_count += 1
@@ -107,7 +108,6 @@ def process_messages():
                 return
         #client = KafkaClient(hosts=hostname)
         #topic = client.topics[str.encode(app_config["events"]["topic"])]
-        consumer = topic.get_simple_consumer(consumer_group=b'event_group',reset_offset_on_start=False,auto_offset_reset=OffsetType.LATEST)
         session = DB_SESSION()
         for msg in consumer:
                 msg_str = msg.value.decode('utf-8')
