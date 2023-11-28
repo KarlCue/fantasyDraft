@@ -15,7 +15,7 @@ CONF_YML = 'app_conf.yml'
 LOG_YML = 'log_conf.yml'
 
 current_datetime = datetime.datetime.now()
-current_datetime_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+current_datetime_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
 
 
 with open (CONF_YML, 'r') as f:
