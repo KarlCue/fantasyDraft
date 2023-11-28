@@ -28,10 +28,10 @@ CONF_YML = 'app_conf.yml'
 LOG_YML = 'log_conf.yml'
 HOST = 'acit3855.eastus.cloudapp.azure.com:9092'
 
-with open (CONF_YML, "r") as f:
+with open(CONF_YML, "r") as f:
     app_config = yaml.safe_load(f.read())
 
-with open (LOG_YML, 'r') as f:
+with open(LOG_YML, 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
@@ -55,7 +55,6 @@ def get_add_pick(start_timestamp, end_timestamp):
 
     for reading in readings:
         result_list.append(reading.to_dict())
-    
 
     session.close()
 
@@ -75,7 +74,6 @@ def get_add_trade(start_timestamp, end_timestamp):
 
     for reading in readings:
         result_list.append(reading.to_dict())
-    
 
     session.close()
 
@@ -150,7 +148,8 @@ def process_messages():
             time.sleep(app_config["kafka"]["retry_interval"])
 
     if retry_count == max_retries:
-        logger.error("Failed to connect to Kafka after maximum retries. Exiting.")
+        logger.error("Failed to connect to Kafka after maximum")
+
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api(YAML_FILE, 
