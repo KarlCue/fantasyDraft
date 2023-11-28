@@ -107,7 +107,14 @@ paths:
       operationId: app.get_add_trade
       description: gets trade requests after a timestamp
       parameters:
-        - name: timestamp
+        - name: start_timestamp
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: "2023-10-03 10:54:57.384402"
+        - name: end_timestamp
           in: query
           description: Limits the number of items on a page
           schema:
