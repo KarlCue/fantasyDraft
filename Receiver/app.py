@@ -57,32 +57,46 @@ def connect_to_kafka():
 # Connect to Kafka on service startup
 connect_to_kafka()
 
-def add_event(body, event_type):
+def add_pick(body):
     trace_id = str(uuid.uuid4())
+
     body["trace_id"] = trace_id
-    logger.info(f'Received {event_type} request with trace id of {body["trace_id"]}')
 
-    # Ensure Kafka client is connected
-    if kafka_client is None or kafka_topic is None:
-        connect_to_kafka()
+    logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
 
-    producer = kafka_topic.get_sync_producer()
-    msg = {
-        "type": event_type,
-        "datetime": datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-        "payload": body
-    }
+    client = KafkaClient(hosts=HOST)
+    topic = client.topics[str.encode('FantasyDraft')]
+    producer = topic.get_sync_producer()
+    msg = { "type": "addPick",
+    "datetime" : datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+    "payload": body }
     msg_str = json.dumps(msg)
     producer.produce(msg_str.encode('utf-8'))
 
-    logger.info(f'Returned {event_type} response (id: {body["trace_id"]}) with status code 201')
+    logger.info(f'Returned Pick response (id: {body["trace_id"]}) with status code 201')
+
     return NoContent, 201
 
-def add_pick(body):
-    return add_event(body, "addPick")
-
 def add_trade(body):
-    return add_event(body, "addTrade")
+
+    trace_id = str(uuid.uuid4())
+
+    body["trace_id"] = trace_id
+
+    logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
+
+    client = KafkaClient(hosts=HOST)
+    topic = client.topics[str.encode('FantasyDraft')]
+    producer = topic.get_sync_producer()
+    msg = { "type": "addTrade",
+    "datetime" : datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
+    "payload": body }
+    msg_str = json.dumps(msg)
+    producer.produce(msg_str.encode('utf-8'))
+
+    logger.info(f'Returned Pick response (id: {body["trace_id"]}) with status code 201')
+
+    return NoContent, 201
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api(YAML_FILE, 
