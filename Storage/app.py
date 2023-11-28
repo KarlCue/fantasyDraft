@@ -108,7 +108,7 @@ def process_messages():
                 return
         #client = KafkaClient(hosts=hostname)
         #topic = client.topics[str.encode(app_config["events"]["topic"])]
-        session = DB_SESSION()
+
         for msg in consumer:
                 msg_str = msg.value.decode('utf-8')
                 msg = json.loads(msg_str)
@@ -124,6 +124,7 @@ def process_messages():
                                 payload['trace_id'])
                     session.add(pick)
                     session.commit()
+                    session.close()
                     logger.debug(f"Stored pick with a trace id of {payload['trace_id']}")
                 elif msg["type"] == "addTrade": 
 
@@ -138,12 +139,13 @@ def process_messages():
 
                     session.add(trade)
                     session.commit()
+                    session.close()
                     logger.debug(f"Stored trade choice with a trace id of {payload['trace_id']}")
                         
                 else:
                         logger.error("Received event with unknown type")
                 consumer.commit_offsets()
-        session.close()
+
         logger.warn("Shutdown of consumer thread complete")
 
 app = connexion.FlaskApp(__name__, specification_dir='')
