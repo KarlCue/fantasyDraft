@@ -43,6 +43,46 @@ logger.info(f"mysql database is running on HostName:{app_config['data']['hostnam
 
 import time
 
+def get_add_pick(start_timestamp, end_timestamp):
+    session = DB_SESSION()
+
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+
+    readings = session.query(AddPick).filter(and_(AddPick.date_created >= start_timestamp_datetime, AddPick.date_created < end_timestamp_datetime))
+
+    result_list = []
+
+    for reading in readings:
+        result_list.append(reading.to_dict())
+    
+
+    session.close()
+
+    logger.info("Query for Draft Selections after %s returns %d results" % (start_timestamp, len(result_list)))
+
+    return result_list, 200
+
+def get_add_trade(start_timestamp, end_timestamp):
+    session = DB_SESSION()
+
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+
+    readings = session.query(AddTrade).filter(and_(AddTrade.date_created >= start_timestamp_datetime, AddTrade.date_created < end_timestamp_datetime))
+
+    result_list = []
+
+    for reading in readings:
+        result_list.append(reading.to_dict())
+    
+
+    session.close()
+
+    logger.info("Query for Trades after %s returns %d results" % (start_timestamp, len(result_list)))
+
+    return result_list, 200
+
 def process_messages():
     max_retries = app_config["kafka"]["max_retries"]
     retry_count = 0
@@ -111,96 +151,6 @@ def process_messages():
 
     if retry_count == max_retries:
         logger.error("Failed to connect to Kafka after maximum retries. Exiting.")
-
-
-def get_add_pick(start_timestamp, end_timestamp):
-    session = DB_SESSION()
-
-    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
-    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
-
-    readings = session.query(AddPick).filter(and_(AddPick.date_created >= start_timestamp_datetime, AddPick.date_created < end_timestamp_datetime))
-
-    result_list = []
-
-    for reading in readings:
-        result_list.append(reading.to_dict())
-    
-
-    session.close()
-
-    logger.info("Query for Draft Selections after %s returns %d results" % (start_timestamp, len(result_list)))
-
-    return result_list, 200
-
-def get_add_trade(start_timestamp, end_timestamp):
-    session = DB_SESSION()
-
-    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
-    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
-
-    readings = session.query(AddTrade).filter(and_(AddTrade.date_created >= start_timestamp_datetime, AddTrade.date_created < end_timestamp_datetime))
-
-    result_list = []
-
-    for reading in readings:
-        result_list.append(reading.to_dict())
-    
-
-    session.close()
-
-    logger.info("Query for Trades after %s returns %d results" % (start_timestamp, len(result_list)))
-
-    return result_list, 200
-
-def process_messages():
-
-    client = KafkaClient(hosts=HOST)
-    topic = client.topics[str.encode(app_config["events"]["topic"])]
-
-    consumer = topic.get_simple_consumer(consumer_group=b'event_group', reset_offset_on_start=False, auto_offset_reset=OffsetType.LATEST)
-
-    for msg in consumer:
-        msg_str = msg.value.decode('utf-8')
-        msg = json.loads(msg_str)
-        logger.info("Message: %s" % msg)
-
-        payload = msg["payload"]
-
-        if msg["type"] == "addPick": 
-            session = DB_SESSION()
-            pick = AddPick(payload['playerId'],
-                        payload['playerName'],
-                        payload['jerseyNum'],
-                        payload['playerGrade'],
-                        payload['playerTotalFanPts'],
-                        payload['plyTotalPoint'],
-                        payload['trace_id'])
-
-            session.add(pick)
-            
-            session.commit()
-            session.close()
-
-            logger.debug(f"Stored Pick request with the a trace id of {payload['trace_id']}")
-
-        elif msg["type"] == "addTrade": 
-            
-            session = DB_SESSION()
-
-            trade = AddTrade(payload['tradeId'],
-                        payload['tradeGrade'],
-                        payload['tradeImpact'],
-                        payload['tradeProp'],
-                        payload['tradeDec'],
-                        payload['trace_id'])
-
-            session.add(trade)
-            session.commit()
-            session.close()
-
-            logger.debug(f"Stored Trade request with the a trace id of {payload['trace_id']}")
-        consumer.commit_offsets()
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api(YAML_FILE, 
