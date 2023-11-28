@@ -30,23 +30,33 @@ with open(LOG_YML, 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
-max_retries = app_config["kafka"]["max_retries"]
-retry_count = 0
+kafka_client = None
+kafka_topic = None
 
-while retry_count < max_retries:
-    try:
-        kafka_client = KafkaClient(hosts=HOST)
-        kafka_topic = kafka_client.topics[str.encode('FantasyDraft')]
-        logger.info("Connected to Kafka successfully.")
-        break
-    except Exception as e:
-        logger.error(f"Error connecting to Kafka: {str(e)}")
-        retry_count += 1
-        logger.info(f"Retrying connection to Kafka. Retry count: {retry_count}")
-        time.sleep(app_config["kafka"]["retry_interval"])
+def connect_to_kafka():
+    global kafka_client
+    global kafka_topic
+    max_retries = app_config["kafka"]["max_retries"]
+    retry_count = 0
 
-if retry_count == max_retries:
-    logger.error("Failed to connect to Kafka after maximum retries. Exiting.")
+    while retry_count < max_retries:
+        try:
+            kafka_client = KafkaClient(hosts=HOST)
+            kafka_topic = kafka_client.topics[str.encode('FantasyDraft')]
+            logger.info("Connected to Kafka successfully.")
+            break
+        except Exception as e:
+            logger.error(f"Error connecting to Kafka: {str(e)}")
+            retry_count += 1
+            logger.info(f"Retrying connection to Kafka. Retry count: {retry_count}")
+            time.sleep(app_config["kafka"]["retry_interval"])
+
+    if retry_count == max_retries:
+        logger.error("Failed to connect to Kafka after maximum retries. Exiting.")
+        # Optionally, you may choose to raise an exception or take other actions.
+
+# Connect to Kafka on service startup
+connect_to_kafka()
 
 def add_pick(body):
     trace_id = str(uuid.uuid4())
