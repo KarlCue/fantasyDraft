@@ -3,6 +3,7 @@ from connexion import NoContent
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import and_
 import yaml
 import logging.config
 from base import Base
@@ -14,6 +15,7 @@ from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread
 import json
+import time
 
 
 current_datetime = datetime.datetime.now()
@@ -40,51 +42,14 @@ Base.metadata.bind = DB_ENGINE
 DB_SESSION = sessionmaker(bind=DB_ENGINE)
 logger.info(f"mysql database is running on HostName:{app_config['data']['hostname']} port{app_config['data']['port']}")
 
-# def add_pick(body):
 
-#     session = DB_SESSION()
-#     pick = AddPick(body['playerId'],
-#                    body['playerName'],
-#                    body['jerseyNum'],
-#                    body['playerGrade'],
-#                    body['playerTotalFanPts'],
-#                    body['plyTotalPoint'],
-#                    body['trace_id'])
-
-#     session.add(pick)
-    
-#     session.commit()
-#     session.close()
-
-#     logger.debug(f"Stored Pick request with the a trace id of {body['trace_id']}")
-
-#     return NoContent, 201
-
-# def add_trade(body):
-
-#     session = DB_SESSION()
-
-#     trade = AddTrade(body['tradeId'],
-#                    body['tradeGrade'],
-#                    body['tradeImpact'],
-#                    body['tradeProp'],
-#                    body['tradeDec'],
-#                    body['trace_id'])
-
-#     session.add(trade)
-    
-#     session.commit()
-#     session.close()
-
-#     logger.debug(f"Stored Trade request with the a trace id of {body['trace_id']}")
-#     return NoContent, 201
-
-def get_add_pick(timestamp):
+def get_add_pick(start_timestamp, end_timestamp):
     session = DB_SESSION()
 
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
 
-    readings = session.query(AddPick).filter(AddPick.date_created >= timestamp_datetime)
+    readings = session.query(AddPick).filter(and_(AddPick.date_created >= start_timestamp_datetime, AddPick.date_created < end_timestamp_datetime))
 
     result_list = []
 
@@ -94,75 +59,98 @@ def get_add_pick(timestamp):
 
     session.close()
 
-    logger.info("Query for Draft Selections after %s returns %d results" % (timestamp, len(result_list)))
+    logger.info("Query for Draft Selections after %s returns %d results" % (start_timestamp_datetime, len(result_list)))
 
     return result_list, 200
 
-def get_add_trade(timestamp):
+def get_add_trade(start_timestamp, end_timestamp):
     session = DB_SESSION()
 
-    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
 
-    readings = session.query(AddTrade).filter(AddTrade.date_created >= timestamp_datetime)
+    readings = session.query(AddTrade).filter(and_(AddTrade.date_created >= start_timestamp_datetime, AddTrade.date_created < end_timestamp_datetime))
+
     result_list = []
 
     for reading in readings:
         result_list.append(reading.to_dict())
+    
 
     session.close()
 
-    logger.info("Query for Trade requests after %s returns %d results" % (timestamp, len(result_list)))
+    logger.info("Query for Trades after %s returns %d results" % (start_timestamp_datetime, len(result_list)))
 
     return result_list, 200
 
 def process_messages():
-    hostname = "%s:%d" % (app_config["events"]["hostname"], app_config["events"]["port"])
-    client = KafkaClient(hosts=HOST)
-    topic = client.topics[str.encode(app_config["events"]["topic"])]
+    max_retries = app_config["kafka"]["max_retries"]
+    retry_count = 0
 
-    consumer = topic.get_simple_consumer(consumer_group=b'event_group', reset_offset_on_start=False, auto_offset_reset=OffsetType.LATEST)
+    while retry_count < max_retries:
+        try:
+            client = KafkaClient(hosts=HOST)
+            topic = client.topics[str.encode(app_config["events"]["topic"])]
 
-    for msg in consumer:
-        msg_str = msg.value.decode('utf-8')
-        msg = json.loads(msg_str)
-        logger.info("Message: %s" % msg)
+            consumer = topic.get_simple_consumer(
+                consumer_group=b'event_group', 
+                reset_offset_on_start=False, 
+                auto_offset_reset=OffsetType.LATEST
+            )
 
-        payload = msg["payload"]
+            for msg in consumer:
+                msg_str = msg.value.decode('utf-8')
+                msg = json.loads(msg_str)
+                logger.info("Message: %s" % msg)
 
-        if msg["type"] == "addPick": 
-            session = DB_SESSION()
-            pick = AddPick(payload['playerId'],
-                        payload['playerName'],
-                        payload['jerseyNum'],
-                        payload['playerGrade'],
-                        payload['playerTotalFanPts'],
-                        payload['plyTotalPoint'],
-                        payload['trace_id'])
+                payload = msg["payload"]
 
-            session.add(pick)
-            
-            session.commit()
-            session.close()
+                if msg["type"] == "addPick": 
+                    session = DB_SESSION()
+                    pick = AddPick(payload['playerId'],
+                                payload['playerName'],
+                                payload['jerseyNum'],
+                                payload['playerGrade'],
+                                payload['playerTotalFanPts'],
+                                payload['plyTotalPoint'],
+                                payload['trace_id'])
 
-            logger.debug(f"Stored Pick request with the a trace id of {payload['trace_id']}")
+                    session.add(pick)
+                    
+                    session.commit()
+                    session.close()
 
-        elif msg["type"] == "addTrade": 
-            
-            session = DB_SESSION()
+                    logger.debug(f"Stored Pick request with the a trace id of {payload['trace_id']}")
 
-            trade = AddTrade(payload['tradeId'],
-                        payload['tradeGrade'],
-                        payload['tradeImpact'],
-                        payload['tradeProp'],
-                        payload['tradeDec'],
-                        payload['trace_id'])
+                elif msg["type"] == "addTrade": 
+                    
+                    session = DB_SESSION()
 
-            session.add(trade)
-            session.commit()
-            session.close()
+                    trade = AddTrade(payload['tradeId'],
+                                payload['tradeGrade'],
+                                payload['tradeImpact'],
+                                payload['tradeProp'],
+                                payload['tradeDec'],
+                                payload['trace_id'])
 
-            logger.debug(f"Stored Trade request with the a trace id of {payload['trace_id']}")
-        consumer.commit_offsets()
+                    session.add(trade)
+                    session.commit()
+                    session.close()
+
+                    logger.debug(f"Stored Trade request with the a trace id of {payload['trace_id']}")
+                consumer.commit_offsets()
+
+            # If execution reaches this point, no exception occurred, break out of the loop
+            break
+
+        except Exception as e:
+            logger.error(f"Error connecting to Kafka: {str(e)}")
+            retry_count += 1
+            logger.info(f"Retrying connection to Kafka. Retry count: {retry_count}")
+            time.sleep(app_config["kafka"]["retry_interval"])
+
+    if retry_count == max_retries:
+        logger.error("Failed to connect to Kafka after maximum retries. Exiting.")
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api(YAML_FILE, 
