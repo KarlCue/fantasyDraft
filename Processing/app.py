@@ -77,8 +77,8 @@ def populate_stats():
             with open(app_config['datastore']['filename'], 'w') as config_file:
                 json.dump(stats, config_file)
 
-        pick = requests.get({app_config['eventstore']['url']} + "/game/draft/readings?start_timestamp="+ stats["last_updated"] + "&end_timestamp=" + current_datetime)
-        trade = requests.get({app_config['eventstore']['url']} + "/game/trades/readings?start_timestamp="+ stats["last_updated"] + "&end_timestamp=" + current_datetime)
+        pick = requests.get(f"{app_config['eventstore']['url']}/game/draft/readings", params={"timestamp" : current_datetime })
+        trade = requests.get(f"{app_config['eventstore']['url']}/game/trades/readings", params={"timestamp" : current_datetime})
         data = pick.json()
         if pick.status_code == 200 and trade.status_code == 200:
             picks = len(pick.json())

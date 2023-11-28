@@ -15,7 +15,6 @@ from pykafka import KafkaClient
 from pykafka.common import OffsetType
 from threading import Thread
 import json
-import time
 
 
 current_datetime = datetime.datetime.now()
@@ -28,10 +27,10 @@ CONF_YML = 'app_conf.yml'
 LOG_YML = 'log_conf.yml'
 HOST = 'acit3855.eastus.cloudapp.azure.com:9092'
 
-with open(CONF_YML, "r") as f:
+with open (CONF_YML, "r") as f:
     app_config = yaml.safe_load(f.read())
 
-with open(LOG_YML, 'r') as f:
+with open (LOG_YML, 'r') as f:
     log_config = yaml.safe_load(f.read())
     logging.config.dictConfig(log_config)
 
@@ -55,6 +54,7 @@ def get_add_pick(start_timestamp, end_timestamp):
 
     for reading in readings:
         result_list.append(reading.to_dict())
+    
 
     session.close()
 
@@ -74,6 +74,7 @@ def get_add_trade(start_timestamp, end_timestamp):
 
     for reading in readings:
         result_list.append(reading.to_dict())
+    
 
     session.close()
 
@@ -82,74 +83,53 @@ def get_add_trade(start_timestamp, end_timestamp):
     return result_list, 200
 
 def process_messages():
-    max_retries = app_config["kafka"]["max_retries"]
-    retry_count = 0
 
-    while retry_count < max_retries:
-        try:
-            client = KafkaClient(hosts=HOST)
-            topic = client.topics[str.encode(app_config["events"]["topic"])]
+    client = KafkaClient(hosts=HOST)
+    topic = client.topics[str.encode(app_config["events"]["topic"])]
 
-            consumer = topic.get_simple_consumer(
-                consumer_group=b'event_group', 
-                reset_offset_on_start=False, 
-                auto_offset_reset=OffsetType.LATEST
-            )
+    consumer = topic.get_simple_consumer(consumer_group=b'event_group', reset_offset_on_start=False, auto_offset_reset=OffsetType.LATEST)
 
-            for msg in consumer:
-                msg_str = msg.value.decode('utf-8')
-                msg = json.loads(msg_str)
-                logger.info("Message: %s" % msg)
+    for msg in consumer:
+        msg_str = msg.value.decode('utf-8')
+        msg = json.loads(msg_str)
+        logger.info("Message: %s" % msg)
 
-                payload = msg["payload"]
+        payload = msg["payload"]
 
-                if msg["type"] == "addPick": 
-                    session = DB_SESSION()
-                    pick = AddPick(payload['playerId'],
-                                payload['playerName'],
-                                payload['jerseyNum'],
-                                payload['playerGrade'],
-                                payload['playerTotalFanPts'],
-                                payload['plyTotalPoint'],
-                                payload['trace_id'])
+        if msg["type"] == "addPick": 
+            session = DB_SESSION()
+            pick = AddPick(payload['playerId'],
+                        payload['playerName'],
+                        payload['jerseyNum'],
+                        payload['playerGrade'],
+                        payload['playerTotalFanPts'],
+                        payload['plyTotalPoint'],
+                        payload['trace_id'])
 
-                    session.add(pick)
-                    
-                    session.commit()
-                    session.close()
+            session.add(pick)
+            
+            session.commit()
+            session.close()
 
-                    logger.debug(f"Stored Pick request with the a trace id of {payload['trace_id']}")
+            logger.debug(f"Stored Pick request with the a trace id of {payload['trace_id']}")
 
-                elif msg["type"] == "addTrade": 
-                    
-                    session = DB_SESSION()
+        elif msg["type"] == "addTrade": 
+            
+            session = DB_SESSION()
 
-                    trade = AddTrade(payload['tradeId'],
-                                payload['tradeGrade'],
-                                payload['tradeImpact'],
-                                payload['tradeProp'],
-                                payload['tradeDec'],
-                                payload['trace_id'])
+            trade = AddTrade(payload['tradeId'],
+                        payload['tradeGrade'],
+                        payload['tradeImpact'],
+                        payload['tradeProp'],
+                        payload['tradeDec'],
+                        payload['trace_id'])
 
-                    session.add(trade)
-                    session.commit()
-                    session.close()
+            session.add(trade)
+            session.commit()
+            session.close()
 
-                    logger.debug(f"Stored Trade request with the a trace id of {payload['trace_id']}")
-                consumer.commit_offsets()
-
-            # If execution reaches this point, no exception occurred, break out of the loop
-            break
-
-        except Exception as e:
-            logger.error(f"Error connecting to Kafka: {str(e)}")
-            retry_count += 1
-            logger.info(f"Retrying connection to Kafka. Retry count: {retry_count}")
-            time.sleep(app_config["kafka"]["retry_interval"])
-
-    if retry_count == max_retries:
-        logger.error("Failed to connect to Kafka after maximum")
-
+            logger.debug(f"Stored Trade request with the a trace id of {payload['trace_id']}")
+        consumer.commit_offsets()
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api(YAML_FILE, 
@@ -161,3 +141,4 @@ if __name__ == "__main__":
     t1.setDaemon(True)
     t1.start()
     app.run(port=SERVICE_PORT)
+
