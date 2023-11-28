@@ -75,7 +75,7 @@ def add_trade(index):
             msg = json.loads(msg_str)
 
             # Check if the event type matches and decrement index until it reaches 0
-            if msg.get("type") == "addPick":
+            if msg.get("type") == "addTrade":
                 if index == 0:
                     return msg, 200
                 index -= 1
