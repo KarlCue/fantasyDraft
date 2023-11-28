@@ -41,7 +41,7 @@ def get_stats():
                     "trade_moves" : stats["trade_moves"],
                     "maxPoints" : stats["maxPoints"],
                     "totalPoints" : stats["totalPoints"],
-                    "last_updated" :  current_datetime
+                    "last_updated" :  current_datetime_str
                     }
 
         logger.debug(f"Statistics Response: {response_data}")
