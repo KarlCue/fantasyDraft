@@ -84,27 +84,35 @@ def get_add_trade(start_timestamp, end_timestamp):
     return result_list, 200
 
 def process_messages():
-    max_retries = app_config["kafka"]["max_retries"]
-    retry_count = 0
-
-    while retry_count < max_retries:
-        try:
-            client = KafkaClient(hosts=HOST)
-            topic = client.topics[str.encode(app_config["events"]["topic"])]
-
-            consumer = topic.get_simple_consumer(
-                consumer_group=b'event_group', 
-                reset_offset_on_start=False, 
-                auto_offset_reset=OffsetType.LATEST
-            )
-
-            for msg in consumer:
+        """ Process event messages """
+        max_retries = app_config["kafka"]["max_retries"]
+        retry_wait = app_config["kafka"]["retry_wait"]
+        hostname = "%s:%d" % (app_config["events"]["hostname"],app_config["events"]["port"]) 
+        retry_count = 0
+        client = None
+        while retry_count < max_retries:
+                try:
+                        logger.info("Trying to connect to kafka")
+                        client = KafkaClient(hosts=hostname)
+                        topic = client.topics[str.encode(app_config["events"]["topic"])]
+                        consumer = topic.get_simple_consumer(consumer_group=b'event_group',reset_offset_on_start=False,auto_offset_reset=OffsetType.LATEST)
+                        logger.info("Successfully connected to kafka")
+                        break
+                except:
+                        logger.error(f"Unable to connect to kafka, retrying in {retry_wait} seconds")
+                        time.sleep(retry_wait)
+                        retry_count += 1
+        if client is None:
+                logger.error(f"Unable to connect to kafka after {max_retries} retries")
+                return
+        #client = KafkaClient(hosts=hostname)
+        #topic = client.topics[str.encode(app_config["events"]["topic"])]
+        consumer = topic.get_simple_consumer(consumer_group=b'event_group',reset_offset_on_start=False,auto_offset_reset=OffsetType.LATEST)
+        session = DB_SESSION()
+        for msg in consumer:
                 msg_str = msg.value.decode('utf-8')
                 msg = json.loads(msg_str)
-                logger.info("Message: %s" % msg)
-
                 payload = msg["payload"]
-
                 if msg["type"] == "addPick": 
                     session = DB_SESSION()
                     pick = AddPick(payload['playerId'],
@@ -114,16 +122,11 @@ def process_messages():
                                 payload['playerTotalFanPts'],
                                 payload['plyTotalPoint'],
                                 payload['trace_id'])
-
                     session.add(pick)
-                    
                     session.commit()
-                    session.close()
-
-                    logger.debug(f"Stored Pick request with the a trace id of {payload['trace_id']}")
-
+                    logger.debug(f"Stored pick with a trace id of {payload['trace_id']}")
                 elif msg["type"] == "addTrade": 
-                    
+
                     session = DB_SESSION()
 
                     trade = AddTrade(payload['tradeId'],
@@ -135,22 +138,13 @@ def process_messages():
 
                     session.add(trade)
                     session.commit()
-                    session.close()
-
-                    logger.debug(f"Stored Trade request with the a trace id of {payload['trace_id']}")
+                    logger.debug(f"Stored trade choice with a trace id of {payload['trace_id']}")
+                        
+                else:
+                        logger.error("Received event with unknown type")
                 consumer.commit_offsets()
-
-            # If execution reaches this point, no exception occurred, break out of the loop
-            break
-
-        except Exception as e:
-            logger.error(f"Error connecting to Kafka: {str(e)}")
-            retry_count += 1
-            logger.info(f"Retrying connection to Kafka. Retry count: {retry_count}")
-            time.sleep(app_config["kafka"]["retry_interval"])
-
-    if retry_count == max_retries:
-        logger.error("Failed to connect to Kafka after maximum retries. Exiting.")
+        session.close()
+        logger.warn("Shutdown of consumer thread complete")
 
 app = connexion.FlaskApp(__name__, specification_dir='')
 app.add_api(YAML_FILE, 

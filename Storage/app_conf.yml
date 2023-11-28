@@ -11,3 +11,4 @@ events:
   topic: FantasyDraft
 kafka:
   max_retries: 10
+  retry_wait: 2
