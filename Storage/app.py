@@ -42,13 +42,12 @@ DB_SESSION = sessionmaker(bind=DB_ENGINE)
 logger.info(f"mysql database is running on HostName:{app_config['data']['hostname']} port{app_config['data']['port']}")
 
 
-def get_add_pick(start_timestamp, end_timestamp):
+def get_add_pick(timestamp):
     session = DB_SESSION()
 
-    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
-    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")
 
-    readings = session.query(AddPick).filter(and_(AddPick.date_created >= start_timestamp_datetime, AddPick.date_created < end_timestamp_datetime))
+    readings = session.query(AddPick).filter(AddPick.date_created >= timestamp_datetime)
 
     result_list = []
 
@@ -58,17 +57,16 @@ def get_add_pick(start_timestamp, end_timestamp):
 
     session.close()
 
-    logger.info("Query for Draft Selections after %s returns %d results" % (start_timestamp_datetime, len(result_list)))
+    logger.info("Query for Draft Selections after %s returns %d results" % (timestamp, len(result_list)))
 
     return result_list, 200
 
-def get_add_trade(start_timestamp, end_timestamp):
+def get_add_trade(timestamp):
     session = DB_SESSION()
 
-    start_timestamp_datetime = datetime.datetime.strptime(start_timestamp, "%Y-%m-%d %H:%M:%S.%f")
-    end_timestamp_datetime = datetime.datetime.strptime(end_timestamp, "%Y-%m-%d %H:%M:%S.%f")
+    timestamp_datetime = datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")
 
-    readings = session.query(AddTrade).filter(and_(AddTrade.date_created >= start_timestamp_datetime, AddTrade.date_created < end_timestamp_datetime))
+    readings = session.query(AddTrade).filter(AddTrade.date_created >= timestamp_datetime)
 
     result_list = []
 
@@ -78,7 +76,7 @@ def get_add_trade(start_timestamp, end_timestamp):
 
     session.close()
 
-    logger.info("Query for Trades after %s returns %d results" % (start_timestamp_datetime, len(result_list)))
+    logger.info("Query for Trades after %s returns %d results" % (timestamp, len(result_list)))
 
     return result_list, 200
 
