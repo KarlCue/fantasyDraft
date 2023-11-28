@@ -16,7 +16,7 @@ tags:
     description: Operations available to regular developers
 
 paths:
-  /game/draft/readings:
+  /draft/readings:
     get:
       tags:
         - devices
@@ -53,7 +53,7 @@ paths:
         "404":
           description: not found
 
-  /game/trades/readings:
+  /trades/readings:
     get:
       tags:
         - devices
