@@ -39,21 +39,23 @@ def add_pick(index):
     consumer = topic.get_simple_consumer(reset_offset_on_start=True,
     consumer_timeout_ms=1000)
     logger.info("retrieve selection %d" % index)
+    
     try:
-        events = []
         for msg in consumer:
             msg_str = msg.value.decode('utf-8')
             msg = json.loads(msg_str)
-            if msg.get("type") == "addPick":
-                events.append(msg)
-                if len(events) > int(index):
-                    logger.info("Found selections at index %d" % int(index))
-                    return events[int(index)], 200
 
-    except:
-        logger.error("No more messages found")
-    logger.error("Could not find selection at index %d" % int(index))
-    return { "message": "Not Found"}, 404
+            # Check if the event type matches and decrement index until it reaches 0
+            if msg.get("type") == "addPick":
+                if index == 0:
+                    return msg, 200
+                index -= 1
+
+        # If no event found at the specified index
+        return {"message": "Not Found"}, 404
+
+    except Exception as e:
+        return {"message": "Internal Server Error"}, 500
 
 
 def add_trade(index):
