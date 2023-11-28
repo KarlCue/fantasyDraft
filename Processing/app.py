@@ -99,7 +99,7 @@ def populate_stats():
         stats["trade_moves"] = trades
         stats["maxPoints"] = max_points
         stats["totalPoints"] = total_points
-        stats["last_updated"] = current_datetime_str
+        stats["last_updated"] = end_time
 
         with open(app_config['datastore']['filename'], 'w') as config_file:
             json.dump(stats, config_file)
