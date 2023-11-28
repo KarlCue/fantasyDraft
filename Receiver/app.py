@@ -7,7 +7,9 @@ import datetime
 import requests
 import json
 from pykafka import KafkaClient
+from pykafka.exceptions import KafkaException
 from connexion import NoContent
+import time
 
 current_datetime = datetime.datetime.now()
 current_datetime_str = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
@@ -28,7 +30,25 @@ with open (LOG_YML, 'r') as f:
 
 logger = logging.getLogger('basicLogger')
 
+def kafka_init():
+        max_retries = app_config['kafka']['max_retries']
+        retry_wait = app_config['kafka']['retry_wait']
+        retry_count = 0
+        while retry_count < max_retries:
+                try:
+                        logger.info("Trying to connect to Kafka")
+                        client = KafkaClient(hosts=f"{app_config['events']['hostname']}:{app_config['events']['port']}")
+                        topic = client.topics[str.encode(app_config['events']['topic'])]
+                        producer = topic.get_sync_producer()
+                        logger.info("Successfully connected to Kafka")
+                        return client,producer
+                except KafkaException:
+                        logger.error(f"Unable to connect to Kafka, retrying in {retry_wait} seconds")
+                        time.sleep(retry_wait)
+                        retry_count += 1
+        raise Exception("Maximum retries reached. Failed to connect to Kafka")
 
+kafka_client,producer = kafka_init()
 def add_pick(body):
 
     trace_id = str(uuid.uuid4())
@@ -37,9 +57,6 @@ def add_pick(body):
 
     logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
 
-    client = KafkaClient(hosts=HOST)
-    topic = client.topics[str.encode('FantasyDraft')]
-    producer = topic.get_sync_producer()
     msg = { "type": "addPick",
     "datetime" : datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
     "payload": body }
@@ -58,9 +75,6 @@ def add_trade(body):
 
     logger.info(f'Received Pick request with trace id of {body["trace_id"]}')
 
-    client = KafkaClient(hosts=HOST)
-    topic = client.topics[str.encode('FantasyDraft')]
-    producer = topic.get_sync_producer()
     msg = { "type": "addTrade",
     "datetime" : datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
     "payload": body }

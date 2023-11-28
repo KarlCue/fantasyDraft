@@ -9,3 +9,4 @@ events:
    topic: events
 kafka:
    max_retries: 10
+   retry_wait: 1

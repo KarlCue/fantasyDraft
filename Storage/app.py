@@ -87,7 +87,7 @@ def process_messages():
         """ Process event messages """
         max_retries = app_config["kafka"]["max_retries"]
         retry_wait = app_config["kafka"]["retry_wait"]
-        hostname = "%s:%d" % (app_config["events"]["hostname"],app_config["events"]["port"]) 
+        hostname = HOST
         retry_count = 0
         client = None
         while retry_count < max_retries:
