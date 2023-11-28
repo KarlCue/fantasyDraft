@@ -71,14 +71,14 @@ paths:
           schema:
             type: string
             format: date-time
-            example: "2023-10-03 10:54:57.384402"
+            example: "2023-10-03 10:54:57"
         - name: end_timestamp
           in: query
           description: Limits the number of items on a page
           schema:
             type: string
             format: date-time
-            example: "2023-10-03 10:54:57.384402"
+            example: "2023-10-03 10:54:57"
 
       responses:
         "200":
@@ -113,14 +113,14 @@ paths:
           schema:
             type: string
             format: date-time
-            example: "2023-10-03 10:54:57.384402"
+            example: "2023-10-03 10:54:57"
         - name: end_timestamp
           in: query
           description: Limits the number of items on a page
           schema:
             type: string
             format: date-time
-            example: "2023-10-03 10:54:57.384402"
+            example: "2023-10-03 10:54:57"
 
       responses:
         "200":
