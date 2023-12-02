@@ -12,6 +12,9 @@ from flask_cors import CORS, cross_origin
 SERVICE_PORT = 8100
 YAML_FILE = 'fantasyLeague.yaml'
 
+current_datetime = datetime.datetime.now()
+current_datetime_str = current_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+
 import os 
 
 if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
@@ -35,6 +38,7 @@ logger = logging.getLogger('basicLogger')
 
 logger.info("App Conf File: %s" % app_conf_file)
 logger.info("Log Conf File: %s" % log_conf_file)
+
 
 def get_stats():
 
@@ -85,12 +89,11 @@ def populate_stats():
             with open(app_config['datastore']['filename'], 'w') as config_file:
                 json.dump(stats, config_file)
         
-        current_datetime = datetime.datetime.now()
-        start_datetime = stats['last_updated']
-        end_time = current_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+        current_time = stats['last_updated']
+        current_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
 
-        pick = requests.get(f"{app_config['eventstore']['url']}/game/draft/readings", params={"start_timestamp" : start_datetime , "end_timestamp" : end_time})
-        trade = requests.get(f"{app_config['eventstore']['url']}/game/trades/readings", params={"start_timestamp" : start_datetime , "end_timestamp" : end_time})
+        pick = requests.get(f"{app_config['eventstore']['url']}/game/draft/readings", params={"start_timestamp" : current_time , "end_timestamp" : current_timestamp})
+        trade = requests.get(f"{app_config['eventstore']['url']}/game/trades/readings", params={"start_timestamp" : current_time , "end_timestamp" : current_timestamp})
         data = pick.json()
         if pick.status_code == 200 and trade.status_code == 200:
             picks = len(pick.json())
@@ -107,7 +110,7 @@ def populate_stats():
         stats["trade_moves"] = trades
         stats["maxPoints"] = max_points
         stats["totalPoints"] = total_points
-        stats["last_updated"] = end_time
+        stats["last_updated"] = current_time
 
         with open(app_config['datastore']['filename'], 'w') as config_file:
             json.dump(stats, config_file)
