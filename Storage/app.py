@@ -24,18 +24,31 @@ current_datetime_str = current_datetime.strftime("%Y-%m-%dT%H:%M:%S")
 MAX_EVENTS = 10
 SERVICE_PORT = 8090
 YAML_FILE = "fantasyLeague.yaml"
-CONF_YML = 'app_conf.yml'
-LOG_YML = 'log_conf.yml'
 HOST = 'acit3855.eastus.cloudapp.azure.com:9092'
 
-with open (CONF_YML, "r") as f:
-    app_config = yaml.safe_load(f.read())
+import os 
 
-with open (LOG_YML, 'r') as f:
-    log_config = yaml.safe_load(f.read())
-    logging.config.dictConfig(log_config)
+if "TARGET_ENV" in os.environ and os.environ["TARGET_ENV"] == "test":
+    print("In Test Environment")
+    app_conf_file = "/config/app_conf.yaml"
+    log_conf_file = "/config/log_conf.yaml"
+else:
+    print("In Dev Environment")
+    app_conf_file = "app_conf.yaml"
+    log_conf_file = "log_conf.yaml"
+
+with open(app_conf_file, 'r') as f:
+        app_config = yaml.safe_load(f.read())
+
+
+with open(log_conf_file, 'r') as f:
+        log_config = yaml.safe_load(f.read())
+        logging.config.dictConfig(log_config)
 
 logger = logging.getLogger('basicLogger')
+
+logger.info("App Conf File: %s" % app_conf_file)
+logger.info("Log Conf File: %s" % log_conf_file)
 
 DB_ENGINE = create_engine(f"mysql+pymysql://{app_config['data']['user']}:{app_config['data']['password']}@{app_config['data']['hostname']}:{app_config['data']['port']}/{app_config['data']['db']}")
 Base.metadata.bind = DB_ENGINE
