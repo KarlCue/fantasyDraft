@@ -90,7 +90,7 @@ def populate_stats():
                 json.dump(stats, config_file)
         
         current_time = stats['last_updated']
-        current_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+        current_timestamp = datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
         pick = requests.get(f"{app_config['eventstore']['url']}/game/draft/readings", params={"start_timestamp" : current_time , "end_timestamp" : current_timestamp})
         trade = requests.get(f"{app_config['eventstore']['url']}/game/trades/readings", params={"start_timestamp" : current_time , "end_timestamp" : current_timestamp})
